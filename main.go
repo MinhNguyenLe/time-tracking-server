@@ -7,9 +7,9 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/Massad/gin-boilerplate/controllers"
-	"github.com/Massad/gin-boilerplate/db"
-	"github.com/Massad/gin-boilerplate/forms"
+	"github.com/MinhNguyenLe/time-tracking-server/controllers"
+	"github.com/MinhNguyenLe/time-tracking-server/db"
+	"github.com/MinhNguyenLe/time-tracking-server/forms"
 	"github.com/gin-contrib/gzip"
 	uuid "github.com/google/uuid"
 	"github.com/joho/godotenv"
@@ -18,8 +18,8 @@ import (
 	"github.com/gin-gonic/gin/binding"
 )
 
-//CORSMiddleware ...
-//CORS (Cross-Origin Resource Sharing)
+// CORSMiddleware ...
+// CORS (Cross-Origin Resource Sharing)
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost")
@@ -38,8 +38,8 @@ func CORSMiddleware() gin.HandlerFunc {
 	}
 }
 
-//RequestIDMiddleware ...
-//Generate a unique ID and attach it to each request for future reference or use
+// RequestIDMiddleware ...
+// Generate a unique ID and attach it to each request for future reference or use
 func RequestIDMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		uuid := uuid.New()
@@ -50,8 +50,8 @@ func RequestIDMiddleware() gin.HandlerFunc {
 
 var auth = new(controllers.AuthController)
 
-//TokenAuthMiddleware ...
-//JWT Authentication middleware attached to each request that needs to be authenitcated to validate the access_token in the header
+// TokenAuthMiddleware ...
+// JWT Authentication middleware attached to each request that needs to be authenitcated to validate the access_token in the header
 func TokenAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		auth.TokenValid(c)
@@ -111,6 +111,9 @@ func main() {
 		v1.GET("/article/:id", TokenAuthMiddleware(), article.One)
 		v1.PUT("/article/:id", TokenAuthMiddleware(), article.Update)
 		v1.DELETE("/article/:id", TokenAuthMiddleware(), article.Delete)
+
+		poromodo := new(controllers.PoromodoController)
+		v1.POST("/poromodo/insert", poromodo.Insert)
 	}
 
 	r.LoadHTMLGlob("./public/html/*")

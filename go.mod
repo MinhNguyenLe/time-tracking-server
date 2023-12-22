@@ -1,4 +1,4 @@
-module github.com/Massad/gin-boilerplate
+module github.com/MinhNguyenLe/time-tracking-server
 
 go 1.14
 
