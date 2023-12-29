@@ -13,7 +13,7 @@ type StrategyController struct{}
 
 var StrategyModel = new(models.StrategyModel)
 
-func (pc *StrategyController) Insert(c *gin.Context) {
+func (sc *StrategyController) Insert(c *gin.Context) {
 	var form forms.InsertStrategyForm
 
 	if validationError := c.ShouldBindJSON(&form); validationError != nil {
@@ -27,9 +27,22 @@ func (pc *StrategyController) Insert(c *gin.Context) {
 	if error != nil {
 		fmt.Println(error)
 
-		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"message": "Error: Poromodo"})
+		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"message": "Error: Insert strategy"})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": msg})
+}
+
+func (sc *StrategyController) GetList(c *gin.Context) {
+	msg, error := StrategyModel.GetList()
+
+	if error != nil {
+		fmt.Println(error)
+
+		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"message": "Error: Get list strategies"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"strategies": msg})
 }

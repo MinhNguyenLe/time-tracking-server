@@ -14,4 +14,7 @@ type InsertStrategyForm struct {
 	Label        string
 	Status       string
 	TimeEstimate int
+	UnitTime     string
+	Process      int
+	IsProduction bool
 }
