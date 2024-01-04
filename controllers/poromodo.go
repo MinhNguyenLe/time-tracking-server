@@ -16,16 +16,11 @@ var PoromodoModel = new(models.PoromodoModel)
 func (pc *PoromodoController) Insert(c *gin.Context) {
 	var form forms.InsertPoromodoForm
 
-	fmt.Println("in")
-
 	if validationError := c.ShouldBindJSON(&form); validationError != nil {
-		fmt.Println("error")
-
 		fmt.Println(validationError)
 		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"Message": "error"})
 		return
 	}
-	fmt.Println("pass")
 
 	msg, error := PoromodoModel.Insert(form)
 	if error != nil {

@@ -8,7 +8,6 @@ type InsertStrategyForm struct {
 	Goal         string
 	Details      string
 	Name         string
-	CreatedAt    time.Time
 	StartedAt    time.Time
 	EndedAt      time.Time
 	Label        string
@@ -17,4 +16,13 @@ type InsertStrategyForm struct {
 	UnitTime     string
 	Process      int
 	IsProduction bool
+}
+
+type StrategyIdForm struct {
+	Id int
+}
+
+type StrategyCompletedForm struct {
+	Id     int
+	Report string
 }

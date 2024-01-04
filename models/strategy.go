@@ -30,11 +30,11 @@ func (p StrategyModel) Insert(form forms.InsertStrategyForm) (strategyId int64, 
 	fmt.Println(form)
 
 	err = db.GetDB().QueryRow(
-		"INSERT INTO public.strategy(name, goal, details, created_at, label, status, time_estimate, started_at, ended_at, unit_time, process, is_production) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING id",
+		"INSERT INTO strategy(name, goal, details, created_at, label, status, time_estimate, started_at, ended_at, unit_time, process, is_production) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING id",
 		form.Name,
 		form.Goal,
 		form.Details,
-		form.CreatedAt,
+		time.Now(),
 		form.Label,
 		form.Status,
 		form.TimeEstimate,
@@ -48,8 +48,7 @@ func (p StrategyModel) Insert(form forms.InsertStrategyForm) (strategyId int64, 
 }
 
 func (s StrategyModel) GetList() ([]ListStrategies, error) {
-
-	rows, err := db.GetDB().Query("SELECT id, name, goal, details, created_at, label, status, time_estimate, started_at, ended_at, process, is_production  FROM strategy")
+	rows, err := db.GetDB().Query("SELECT id, name, goal, details, created_at, label, status, time_estimate, started_at, ended_at, process, is_production FROM strategy ORDER BY status desc")
 	if err != nil {
 		return nil, err
 	}
@@ -73,4 +72,32 @@ func (s StrategyModel) GetList() ([]ListStrategies, error) {
 		return strategies, err
 	}
 	return strategies, nil
+}
+
+func (s StrategyModel) TriggerInProcess(form forms.StrategyIdForm) error {
+	_, err := db.GetDB().Query("SELECT * FROM strategy WHERE id=$1", form.Id)
+	if err != nil {
+		return err
+	}
+
+	_, errorUpdate := db.GetDB().Query("UPDATE strategy SET status=$1 WHERE id=3", "IN_PROCESS", form.Id)
+	if errorUpdate != nil {
+		return errorUpdate
+	}
+
+	return nil
+}
+
+func (s StrategyModel) TriggerCompleted(form forms.StrategyIdForm) error {
+	_, err := db.GetDB().Query("SELECT * FROM strategy WHERE id=$1", form.Id)
+	if err != nil {
+		return err
+	}
+
+	_, errorUpdate := db.GetDB().Query("UPDATE strategy SET status=$1 WHERE id=$2", "COMPLETED", form.Id)
+	if errorUpdate != nil {
+		return errorUpdate
+	}
+
+	return nil
 }

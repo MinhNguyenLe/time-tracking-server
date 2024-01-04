@@ -118,6 +118,8 @@ func main() {
 		strategy := new(controllers.StrategyController)
 		v1.POST("/strategy/insert", strategy.Insert)
 		v1.GET("/strategy/get-list", strategy.GetList)
+		v1.POST("/strategy/start", strategy.TriggerInProcess)
+		v1.POST("/strategy/complete", strategy.TriggerCompleted)
 	}
 
 	r.LoadHTMLGlob("./public/html/*")

@@ -46,3 +46,43 @@ func (sc *StrategyController) GetList(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"strategies": msg})
 }
+
+func (sc *StrategyController) TriggerInProcess(c *gin.Context) {
+	var form forms.StrategyIdForm
+	if validationError := c.ShouldBindJSON(&form); validationError != nil {
+		fmt.Println(validationError)
+		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"Message": "error"})
+		return
+	}
+
+	error := StrategyModel.TriggerInProcess(form)
+
+	if error != nil {
+		fmt.Println(error)
+
+		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"message": "Error: Strategy start"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Successful"})
+}
+
+func (sc *StrategyController) TriggerCompleted(c *gin.Context) {
+	var form forms.StrategyIdForm
+	if validationError := c.ShouldBindJSON(&form); validationError != nil {
+		fmt.Println(validationError)
+		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"Message": "error"})
+		return
+	}
+
+	error := StrategyModel.TriggerCompleted(form)
+
+	if error != nil {
+		fmt.Println(error)
+
+		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"message": "Error: Strategy complete"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Successful"})
+}
