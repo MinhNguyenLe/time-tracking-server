@@ -1,19 +1,14 @@
 package forms
 
-import "time"
-
-type StrategyForm struct{}
-
 type InsertStrategyForm struct {
 	Goal         string
 	Details      string
 	Name         string
-	StartedAt    time.Time
-	EndedAt      time.Time
+	StartedAt    string
+	EndedAt      string
 	Label        string
 	Status       string
 	TimeEstimate int
-	UnitTime     string
 	Process      int
 	IsProduction bool
 }
@@ -25,4 +20,13 @@ type StrategyIdForm struct {
 type StrategyCompletedForm struct {
 	Id     int
 	Report string
+}
+
+type StrategyStatusForm struct {
+	Status string
+}
+
+type ChangeStrategyStatusForm struct {
+	Id     int
+	Status string
 }

@@ -9,4 +9,5 @@ type InsertPoromodoForm struct {
 	Productivity int
 	Interested   int
 	Insight      int
+	Goal         string
 }

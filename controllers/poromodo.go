@@ -22,13 +22,13 @@ func (pc *PoromodoController) Insert(c *gin.Context) {
 		return
 	}
 
-	msg, error := PoromodoModel.Insert(form)
+	newPoromodoId, error := PoromodoModel.Insert(form)
 	if error != nil {
 		fmt.Println(error)
 
-		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"message": "Error: Poromodo"})
+		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"message": "Error insert Poromodo"})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": msg})
+	c.JSON(http.StatusOK, gin.H{"newPoromodoId": newPoromodoId})
 }

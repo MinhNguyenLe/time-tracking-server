@@ -116,9 +116,13 @@ func main() {
 		v1.POST("/poromodo/insert", poromodo.Insert)
 
 		strategy := new(controllers.StrategyController)
+
 		v1.POST("/strategy/insert", strategy.Insert)
+
 		v1.GET("/strategy/get-list", strategy.GetList)
-		v1.POST("/strategy/start", strategy.TriggerInProcess)
+		v1.GET("/strategy/get-by-status", strategy.GetStrategiesByStatus)
+
+		v1.POST("/strategy/change-status", strategy.ChangeStatus)
 		v1.POST("/strategy/complete", strategy.TriggerCompleted)
 	}
 
