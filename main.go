@@ -114,6 +114,7 @@ func main() {
 
 		poromodo := new(controllers.PoromodoController)
 		v1.POST("/poromodo/insert", poromodo.Insert)
+		v1.GET("/poromodo/get-list", poromodo.GetList)
 
 		strategy := new(controllers.StrategyController)
 
@@ -121,9 +122,10 @@ func main() {
 
 		v1.GET("/strategy/get-list", strategy.GetList)
 		v1.GET("/strategy/get-by-status", strategy.GetStrategiesByStatus)
-
 		v1.POST("/strategy/change-status", strategy.ChangeStatus)
 		v1.POST("/strategy/complete", strategy.TriggerCompleted)
+		v1.GET("/strategy/get-changed-history", strategy.GetDetailChangedHistory)
+
 	}
 
 	r.LoadHTMLGlob("./public/html/*")

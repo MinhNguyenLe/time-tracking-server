@@ -68,7 +68,7 @@ func (sc *StrategyController) ChangeStatus(c *gin.Context) {
 }
 
 func (sc *StrategyController) TriggerCompleted(c *gin.Context) {
-	var form forms.StrategyIdForm
+	var form forms.StrategyCompletedForm
 	if validationError := c.ShouldBindJSON(&form); validationError != nil {
 		fmt.Println(validationError)
 		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"Message": "error"})
@@ -80,23 +80,17 @@ func (sc *StrategyController) TriggerCompleted(c *gin.Context) {
 	if error != nil {
 		fmt.Println(error)
 
-		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"message": "Error: Strategy complete"})
+		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"message": "Error: Trigger strategy completed"})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Successful"})
+	c.JSON(http.StatusOK, gin.H{"message": "Trigger strategy completed successful"})
 }
 
 func (sc *StrategyController) GetStrategiesByStatus(c *gin.Context) {
-	var form forms.StrategyStatusForm
+	status := c.Request.URL.Query().Get("status")
 
-	if validationError := c.ShouldBindJSON(&form); validationError != nil {
-		fmt.Println(validationError)
-		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"Message": "error"})
-		return
-	}
-
-	rows, error := StrategyModel.GetStrategiesByStatus(form)
+	rows, error := StrategyModel.GetStrategiesByStatus(status)
 
 	if error != nil {
 		fmt.Println(error)
@@ -105,5 +99,20 @@ func (sc *StrategyController) GetStrategiesByStatus(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": rows})
+	c.JSON(http.StatusOK, gin.H{"strategies": rows})
+}
+
+func (sc *StrategyController) GetDetailChangedHistory(c *gin.Context) {
+	strategyId := c.Request.URL.Query().Get("id")
+
+	rows, error := StrategyModel.GetDetailChangedHistory(strategyId)
+
+	if error != nil {
+		fmt.Println(error)
+
+		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"message": "Error: get detail changed history"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"changedHistory": rows})
 }

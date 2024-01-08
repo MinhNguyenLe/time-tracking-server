@@ -7,9 +7,7 @@ type InsertStrategyForm struct {
 	StartedAt    string
 	EndedAt      string
 	Label        string
-	Status       string
 	TimeEstimate int
-	Process      int
 	IsProduction bool
 }
 
@@ -20,10 +18,6 @@ type StrategyIdForm struct {
 type StrategyCompletedForm struct {
 	Id     int
 	Report string
-}
-
-type StrategyStatusForm struct {
-	Status string
 }
 
 type ChangeStrategyStatusForm struct {

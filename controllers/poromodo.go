@@ -32,3 +32,16 @@ func (pc *PoromodoController) Insert(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"newPoromodoId": newPoromodoId})
 }
+
+func (sc *PoromodoController) GetList(c *gin.Context) {
+	msg, error := PoromodoModel.GetList()
+
+	if error != nil {
+		fmt.Println(error)
+
+		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"message": "Error: Get list poromodos"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"poromodos": msg})
+}
