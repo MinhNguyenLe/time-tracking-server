@@ -16,7 +16,6 @@ type Poromodo struct {
 		Status       string
 		Goal         string
 	}
-	Id           int
 	Satisfaction float64
 	Productivity float64
 	Interested   float64
@@ -40,7 +39,7 @@ func (p PoromodoModel) Insert(form forms.InsertPoromodoForm) (poromodoId int64, 
 }
 
 func (s PoromodoModel) GetList() ([]Poromodo, error) {
-	rows, err := db.GetDB().Query("SELECT duration, poromodo.satisfaction, poromodo.productivity, poromodo.interested, poromodo.insight, strategy.name, strategy.goal, strategy.process, strategy.time_estimate, strategy.label, strategy.status from poromodo inner join strategy on strategy_id=strategy.id order by poromodo.created_at desc	limit 20")
+	rows, err := db.GetDB().Query("SELECT poromodo.goal, duration, poromodo.satisfaction, poromodo.productivity, poromodo.interested, poromodo.insight, strategy.name, strategy.goal, strategy.process, strategy.time_estimate, strategy.label, strategy.status from poromodo inner join strategy on strategy_id=strategy.id order by poromodo.created_at desc	limit 20")
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +50,30 @@ func (s PoromodoModel) GetList() ([]Poromodo, error) {
 
 	for rows.Next() {
 		var poromodo Poromodo
-		if err := rows.Scan(&poromodo.Duration, &poromodo.Satisfaction, &poromodo.Productivity, &poromodo.Interested, &poromodo.Insight, &poromodo.Strategy.Name, &poromodo.Strategy.Goal, &poromodo.Strategy.Process, &poromodo.Strategy.TimeEstimate, &poromodo.Strategy.Label, &poromodo.Strategy.Status); err != nil {
+		if err := rows.Scan(&poromodo.Goal, &poromodo.Duration, &poromodo.Satisfaction, &poromodo.Productivity, &poromodo.Interested, &poromodo.Insight, &poromodo.Strategy.Name, &poromodo.Strategy.Goal, &poromodo.Strategy.Process, &poromodo.Strategy.TimeEstimate, &poromodo.Strategy.Label, &poromodo.Strategy.Status); err != nil {
+			return poromodos, err
+		}
+		poromodos = append(poromodos, poromodo)
+	}
+	if err = rows.Err(); err != nil {
+		return poromodos, err
+	}
+	return poromodos, nil
+}
+
+func (s PoromodoModel) GetByStrategyId(id string) ([]Poromodo, error) {
+	rows, err := db.GetDB().Query("SELECT goal, duration, satisfaction, productivity, interested, insight from poromodo WHERE strategy_id=$1 order by created_at desc", id)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var poromodos []Poromodo
+
+	for rows.Next() {
+		var poromodo Poromodo
+		if err := rows.Scan(&poromodo.Goal, &poromodo.Duration, &poromodo.Satisfaction, &poromodo.Productivity, &poromodo.Interested, &poromodo.Insight); err != nil {
 			return poromodos, err
 		}
 		poromodos = append(poromodos, poromodo)

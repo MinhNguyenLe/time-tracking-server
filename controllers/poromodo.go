@@ -45,3 +45,18 @@ func (sc *PoromodoController) GetList(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"poromodos": msg})
 }
+
+func (sc *PoromodoController) GetByStrategyId(c *gin.Context) {
+	strategyId := c.Request.URL.Query().Get("id")
+
+	msg, error := PoromodoModel.GetByStrategyId(strategyId)
+
+	if error != nil {
+		fmt.Println(error)
+
+		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"message": "Error: Get list poromodos"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"poromodos": msg})
+}

@@ -22,6 +22,10 @@ type Strategy struct {
 	TimeEstimate float64
 	Process      *int
 	IsProduction *bool
+	Satisfaction *float64
+	Productivity *float64
+	Interested   *float64
+	Insight      *float64
 }
 
 type ListStrategiesByStatus struct {
@@ -71,7 +75,7 @@ func (p StrategyModel) Insert(form forms.InsertStrategyForm) (strategyId int64, 
 }
 
 func (s StrategyModel) GetList() ([]Strategy, error) {
-	rows, err := db.GetDB().Query("SELECT id, name, goal, details, created_at, label, status, time_estimate, started_at, ended_at, process, is_production FROM strategy ORDER BY status desc, updated_at desc, created_at desc")
+	rows, err := db.GetDB().Query("SELECT id, name, goal, details, created_at, label, status, time_estimate, started_at, ended_at, process, is_production, satisfaction, productivity, interested, insight FROM strategy ORDER BY status desc, updated_at desc, created_at desc")
 	if err != nil {
 		return nil, err
 	}
@@ -86,7 +90,7 @@ func (s StrategyModel) GetList() ([]Strategy, error) {
 			&strategy.Details, &strategy.CreatedAt, &strategy.Label,
 			&strategy.Status, &strategy.TimeEstimate,
 			&strategy.StartedAt, &strategy.EndedAt,
-			&strategy.Process, &strategy.IsProduction); err != nil {
+			&strategy.Process, &strategy.IsProduction, &strategy.Satisfaction, &strategy.Productivity, &strategy.Interested, &strategy.Insight); err != nil {
 			return strategies, err
 		}
 		strategies = append(strategies, strategy)
